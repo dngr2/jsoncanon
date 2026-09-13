@@ -5,7 +5,7 @@ from jsoncanon.functions import (dict_to_sorted_by_utf16_tuple,
 from jsoncanon.util import JSON, JsonDataPreprocessor
 
 
-def test_float_to_int_if_whole_and_not_large_exp():
+def test_float_to_int_if_whole_and_not_large_exp() -> None:
     assert float_to_int_if_whole_and_not_large_exp(1.0) == 1
     assert type(float_to_int_if_whole_and_not_large_exp(1.0)) is int
 
@@ -40,7 +40,7 @@ def test_float_to_int_if_whole_and_not_large_exp():
     assert type(float_to_int_if_whole_and_not_large_exp(-1e-1)) is float
 
 
-def test_int_to_str_if_too_large():
+def test_int_to_str_if_too_large() -> None:
     assert int_to_str_if_too_large(9223372036854775807) == 9223372036854775807
     assert type(int_to_str_if_too_large(9223372036854775807)) is int
 
@@ -54,7 +54,7 @@ def test_int_to_str_if_too_large():
     assert type(int_to_str_if_too_large(-9223372036854775808)) is str
 
 
-def test_to_utf16_tuple():
+def test_to_utf16_tuple() -> None:
     assert to_utf16_tuple('€') == (8364,)
     assert to_utf16_tuple('1') == (49,)
     assert to_utf16_tuple('\r') == (13,)
@@ -65,12 +65,12 @@ def test_to_utf16_tuple():
     assert to_utf16_tuple('€1\rדּ😀\x80ö') == (8364, 49, 13, 64307, 55357, 56832, 128, 246)
 
 
-def test_dict_to_sorted_by_utf16_tuple():
+def test_dict_to_sorted_by_utf16_tuple() -> None:
     assert dict_to_sorted_by_utf16_tuple({'b': 2, 'a': 1}) == {'a': 1, 'b': 2}
     assert dict_to_sorted_by_utf16_tuple({'😀דּ': 2, 'דּ😀': 1}) == {'דּ😀': 1, '😀דּ': 2}
 
 
-def test_dict_to_sorted_by_utf16_tuple_recursive():
+def test_dict_to_sorted_by_utf16_tuple_recursive() -> None:
     def dict_to_sorted_by_utf16_tuple_recursive(data: JSON):
         _dict_to_sorted_by_utf16_tuple_recursive = JsonDataPreprocessor(
             [dict_to_sorted_by_utf16_tuple])

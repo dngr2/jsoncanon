@@ -7,11 +7,12 @@ repository = "https://github.com/sveinugu/jsoncanon"
 authors = ["Sveinung Gundersen <sveinugu@gmail.com>"]
 readme = "README.md"
 keywords = ["JSON", "RFC-8785", "canonicalization", "deterministic", "serialization", "hash"]
-classifiers = ["Development Status :: 2 - Pre-Alpha", "Intended Audience :: Developers", "License :: OSI Approved :: Apache Software License", "Programming Language :: Python :: 3.8", "Topic :: Software Development :: Libraries"]
+classifiers = ["Development Status :: 2 - Pre-Alpha", "Intended Audience :: Developers", "License :: OSI Approved :: Apache Software License", "Programming Language :: Python :: 3.10", "Topic :: Software Development :: Libraries"]
 packages = [{include = "jsoncanon", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
+toml = "^0.10.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.0"
@@ -41,5 +42,5 @@ split_before_arithmetic_operator = true
 profile = "google"
 force_single_line = false
 multi_line_output = 1
-src_paths = ["src/unifair", "tests"]
+src_paths = ["src/jsoncanon", "tests"]
 line_length = 100

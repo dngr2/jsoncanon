@@ -2,21 +2,21 @@ from jsoncanon import __version__, canonicalize
 import pytest
 
 
-def test_version():
+def test_version() -> None:
     assert __version__ == '0.2.3'
 
 
-def test_whitespace():
+def test_whitespace() -> None:
     assert canonicalize({'a': [2, 3, 4, {'b': 2}, 3]}) == b'{"a":[2,3,4,{"b":2},3]}'
 
 
-def test_literals():
+def test_literals() -> None:
     assert canonicalize(None) == b'null'
     assert canonicalize(True) == b'true'
     assert canonicalize(False) == b'false'
 
 
-def test_strings():
+def test_strings() -> None:
     for c in range(8):
         assert canonicalize(chr(c)) == b'"\\u00%(c)02x"' % {b'c': c}
 
@@ -59,7 +59,7 @@ def test_strings():
     assert canonicalize('ö') == bytes(f'"ö"', 'utf8')
 
 
-def test_numbers():
+def test_numbers() -> None:
     with pytest.raises(ValueError):
         assert canonicalize(float('nan'))
     with pytest.raises(ValueError):
@@ -73,7 +73,7 @@ def test_numbers():
     assert canonicalize(1e-6) == b'0.000001'
 
 
-def test_sorting():
+def test_sorting() -> None:
     input = {
         '€': 'Euro Sign',
         '\r': 'Carriage Return',

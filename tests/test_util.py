@@ -1,5 +1,6 @@
 from enum import IntEnum
 from types import NoneType
+from typing import Annotated
 
 from jsoncanon.util import ensure_plain_type, JSON, JSON_Dict, JSON_List, JsonDataPreprocessor
 import pytest
@@ -38,7 +39,7 @@ def invalid_preproc_func_no_return_annotation(s) -> str:
         invalid_preproc_func_no_return_annotation,
     ],
 )
-def test_json_preprocessor_valid_funcs(preproc_func):
+def test_json_preprocessor_valid_funcs(preproc_func) -> None:
     with pytest.raises(AssertionError):
         JsonDataPreprocessor([preproc_func])
 
@@ -81,7 +82,8 @@ def json_data_preprocessor() -> JsonDataPreprocessor:
     ])
 
 
-def test_preprocess_json_data_core_types(json_data_preprocessor):
+def test_preprocess_json_data_core_types(
+        json_data_preprocessor: Annotated[JsonDataPreprocessor, pytest.fixture]) -> None:
     data: JSON = {
         'outer_key': [
             'text',
@@ -112,7 +114,7 @@ def test_preprocess_json_data_core_types(json_data_preprocessor):
     }
 
 
-def test_preprocess_json_data_int_enum(json_data_preprocessor):
+def test_preprocess_json_data_int_enum(json_data_preprocessor) -> None:
     class Choice(IntEnum):
         Yes = 1
         No = 0
@@ -120,6 +122,6 @@ def test_preprocess_json_data_int_enum(json_data_preprocessor):
     assert json_data_preprocessor([Choice.Yes, Choice.No]) == [1, 2]
 
 
-def test_preprocess_json_data_set_fail(json_data_preprocessor):
+def test_preprocess_json_data_set_fail(json_data_preprocessor) -> None:
     with pytest.raises(TypeError):
-        assert json_data_preprocessor(set([1, 2, 3]))  # noqa
+        assert json_data_preprocessor(set([1, 2, 3]))

@@ -1,28 +1,24 @@
 from collections import defaultdict
 from dataclasses import dataclass
 from inspect import Parameter, signature, Signature
-from types import GenericAlias, NoneType, UnionType
+from types import GenericAlias, NoneType
 from typing import (Any,
                     Callable,
                     cast,
-                    Dict,
                     Generic,
                     get_args,
                     get_origin,
-                    List,
                     NamedTuple,
                     Optional,
-                    Tuple,
                     Type,
                     TypeAlias,
-                    TypeVar,
-                    Union)
+                    TypeVar)
 
-JSON_Dict = Dict[str, 'JSON']
-JSON_List = List['JSON']
-JSON_List_or_Tuple = Union[List['JSON'], Tuple['JSON', ...]]
-JSON = Union[JSON_Dict, JSON_List_or_Tuple, str, int, float, bool, NoneType]
-JSON_Type = Type[Union[str, int, float, bool, None, Dict, List]]
+JSON_Dict = dict[str, 'JSON']
+JSON_List = list['JSON']
+JSON_List_or_Tuple = list['JSON'] | tuple['JSON', ...]
+JSON = JSON_Dict | JSON_List_or_Tuple | str | int | float | bool | NoneType
+JSON_Type = Type[str | int | float | bool | None | dict | list]
 
 
 def ensure_plain_type(in_type: type | GenericAlias) -> type:
@@ -53,9 +49,9 @@ class PreprocFuncInfo:
 
 @dataclass
 class JsonDataPreprocessor:
-    def __init__(self, preprocess_funcs: List[PreprocFunc] = []):
+    def __init__(self, preprocess_funcs: list[PreprocFunc] = []):
         self._preprocess_func_info_dict: defaultdict[type[JSON],
-                                                     List[PreprocFuncInfo]] = defaultdict(list)
+                                                     list[PreprocFuncInfo]] = defaultdict(list)
         for preproc_func in preprocess_funcs:
             func_sign = signature(preproc_func)
             input_type = self._validate_params_and_get_input_type(func_sign, preproc_func)
