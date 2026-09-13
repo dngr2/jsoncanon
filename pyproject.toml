@@ -19,6 +19,8 @@ dev = [
     "pytest-pycharm>=0.7.0,<0.8",
     "ruff>=0.16.0,<0.17",
     "prek>=0.2.0,<1",
+    "mypy>=2.3.0,<3",
+    "pyright>=1.1.400,<2",
 ]
 
 [build-system]
@@ -47,3 +49,12 @@ force-single-line = false
 
 [tool.ruff.format]
 quote-style = "single"
+
+[tool.pyright]
+include = ["src/jsoncanon", "tests"]
+exclude = ["tests/json-canonicalization"]
+typeCheckingMode = "strict"
+
+[tool.mypy]
+strict = true
+exclude = ["tests/json-canonicalization"]

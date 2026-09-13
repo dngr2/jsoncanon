@@ -8,17 +8,24 @@ exclude = "^tests/json-canonicalization/"
 repo = "https://github.com/pre-commit/pre-commit-hooks"
 rev = "v5.0.0"
 hooks = [
-    { id = "trailing-whitespace" },
-    { id = "end-of-file-fixer" },
-    { id = "check-toml" },
-    { id = "check-yaml" },
-    { id = "check-merge-conflict" },
+    { id = "trailing-whitespace", groups = ["watch", "commit"] },
+    { id = "end-of-file-fixer", groups = ["watch", "commit"] },
+    { id = "check-toml", groups = ["commit"] },
+    { id = "check-yaml", groups = ["commit"] },
+    { id = "check-merge-conflict", groups = ["commit"] },
 ]
 
 [[repos]]
 repo = "https://github.com/astral-sh/ruff-pre-commit"
 rev = "v0.13.3"
 hooks = [
-    { id = "ruff-check", args = ["--fix"] },
-    { id = "ruff-format" },
+    { id = "ruff-check", args = ["--fix"], groups = ["commit"] },
+    { id = "ruff-format", groups = ["commit"] },
+]
+
+[[repos]]
+repo = "local"
+hooks = [
+    { id = "pyright", name = "pyright", entry = "uv run pyright src", language = "system", types = ["python"], pass_filenames = false, groups = ["commit"] },
+    { id = "mypy", name = "mypy", entry = "uv run mypy src", language = "system", types = ["python"], pass_filenames = false, groups = ["commit"] },
 ]
