@@ -1,18 +1,15 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from inspect import Parameter, signature, Signature
+from inspect import Parameter, Signature, signature
 from types import GenericAlias, NoneType
-from typing import (Any,
-                    Callable,
-                    cast,
-                    Generic,
-                    get_args,
-                    get_origin,
-                    NamedTuple,
-                    Optional,
-                    Type,
-                    TypeAlias,
-                    TypeVar)
+from typing import (
+    Any,
+    Callable,
+    Type,
+    TypeAlias,
+    get_args,
+    get_origin,
+)
 
 JSON_Dict = dict[str, 'JSON']
 JSON_List = list['JSON']
@@ -50,20 +47,23 @@ class PreprocFuncInfo:
 @dataclass
 class JsonDataPreprocessor:
     def __init__(self, preprocess_funcs: list[PreprocFunc] = []):
-        self._preprocess_func_info_dict: defaultdict[type[JSON],
-                                                     list[PreprocFuncInfo]] = defaultdict(list)
+        self._preprocess_func_info_dict: defaultdict[type[JSON], list[PreprocFuncInfo]] = (
+            defaultdict(list)
+        )
         for preproc_func in preprocess_funcs:
             func_sign = signature(preproc_func)
             input_type = self._validate_params_and_get_input_type(func_sign, preproc_func)
             return_type = self._validate_and_get_return_type(func_sign, preproc_func)
 
             self._preprocess_func_info_dict[input_type].append(
-                PreprocFuncInfo(input_type, return_type, preproc_func))
+                PreprocFuncInfo(input_type, return_type, preproc_func)
+            )
 
     def _validate_and_get_return_type(self, func_sign: Signature, preproc_func: PreprocFunc) -> Any:
         return_type = func_sign.return_annotation
         assert return_type is not Parameter.empty, (
-            f'Preprocess function {preproc_func.__name__} must have a return annotation')
+            f'Preprocess function {preproc_func.__name__} must have a return annotation'
+        )
 
         return ensure_plain_type(return_type)
 
@@ -73,15 +73,18 @@ class JsonDataPreprocessor:
         preproc_func: PreprocFunc,
     ) -> Any:
         assert len(func_sign.parameters) == 1, (
-            f'Preprocess function {preproc_func.__name__} must have exactly one parameter')
+            f'Preprocess function {preproc_func.__name__} must have exactly one parameter'
+        )
 
         input_param: Parameter = tuple(func_sign.parameters.values())[0]
         assert input_param.kind == Parameter.POSITIONAL_ONLY, (
-            f'Preprocess function {preproc_func.__name__} parameter must be positional only')
+            f'Preprocess function {preproc_func.__name__} parameter must be positional only'
+        )
 
         input_annotation = input_param.annotation
         assert input_annotation is not Parameter.empty, (
-            f'Preprocess function {preproc_func.__name__} parameter must have type annotation')
+            f'Preprocess function {preproc_func.__name__} parameter must have type annotation'
+        )
 
         return ensure_plain_type(input_annotation)
 

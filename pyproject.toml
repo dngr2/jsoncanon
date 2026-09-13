@@ -19,10 +19,7 @@ repository = "https://github.com/sveinugu/jsoncanon"
 dev = [
     "pytest>=7.1.0,<8",
     "pytest-pycharm>=0.7.0,<0.8",
-    "yapf>=0.43.0,<0.44",
-    "flake8>=4.0.1,<5",
-    "isort>=5.10.1,<6",
-    "flake8-quotes>=3.3.1,<4",
+    "ruff>=0.13.0,<0.14",
 ]
 
 [build-system]
@@ -32,21 +29,22 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/jsoncanon"]
 
-[tool.yapf]
-based_on_style = "google"
-align_closing_bracket_with_visual_indent = true
-blank_line_before_nested_class_or_def = false
-column_limit = 100
-indent_dictionary_value = true
-join_multiple_lines = true
-split_all_comma_separated_values = false
-split_all_top_level_comma_separated_values = true
-split_before_expression_after_opening_paren = true
-split_before_arithmetic_operator = true
+[tool.ruff]
+line-length = 100
+src = ["src/jsoncanon", "tests"]
+extend-exclude = ["tests/json-canonicalization"]
+force-exclude = true
 
-[tool.isort]
-profile = "google"
-force_single_line = false
-multi_line_output = 1
-src_paths = ["src/jsoncanon", "tests"]
-line_length = 100
+[tool.ruff.lint]
+select = ["E", "F", "W", "C90", "I", "Q"]
+ignore = ["E721"]
+mccabe = {max-complexity = 10}
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.isort]
+force-single-line = false
+
+[tool.ruff.format]
+quote-style = "single"

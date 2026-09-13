@@ -1,5 +1,5 @@
-from jsoncanon import __version__, canonicalize
 import pytest
+from jsoncanon import __version__, canonicalize
 
 
 def test_version() -> None:
@@ -52,11 +52,11 @@ def test_strings() -> None:
     for c in range(57344, 65536):
         assert canonicalize(chr(c)) == bytes(f'"{chr(c)}"', 'utf8')
 
-    assert canonicalize('€') == bytes(f'"€"', 'utf8')
-    assert canonicalize('דּ') == bytes(f'"דּ"', 'utf8')
-    assert canonicalize('😀') == bytes(f'"😀"', 'utf8')
-    assert canonicalize('\x80') == bytes(f'"\x80"', 'utf8')
-    assert canonicalize('ö') == bytes(f'"ö"', 'utf8')
+    assert canonicalize('€') == bytes('"€"', 'utf8')
+    assert canonicalize('דּ') == bytes('"דּ"', 'utf8')
+    assert canonicalize('😀') == bytes('"😀"', 'utf8')
+    assert canonicalize('\x80') == bytes('"\x80"', 'utf8')
+    assert canonicalize('ö') == bytes('"ö"', 'utf8')
 
 
 def test_numbers() -> None:
@@ -79,9 +79,9 @@ def test_sorting() -> None:
         '\r': 'Carriage Return',
         'דּ': 'Hebrew Letter Dalet With Dagesh',
         '1': 'One',
-        '😀': "Emoji: Grinning Face",
-        '\x80': "Control",
-        'ö': "Latin Small Letter O With Diaeresis"
+        '😀': 'Emoji: Grinning Face',
+        '\x80': 'Control',
+        'ö': 'Latin Small Letter O With Diaeresis',
     }
 
     output = bytes(
@@ -92,6 +92,7 @@ def test_sorting() -> None:
         '"€":"Euro Sign",'
         '"😀":"Emoji: Grinning Face",'
         '"דּ":"Hebrew Letter Dalet With Dagesh"}',
-        'utf8')
+        'utf8',
+    )
 
     assert canonicalize(input) == output

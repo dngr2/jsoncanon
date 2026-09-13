@@ -1,7 +1,9 @@
-from jsoncanon.functions import (dict_to_sorted_by_utf16_tuple,
-                                 float_to_int_if_whole_and_not_large_exp,
-                                 int_to_str_if_too_large,
-                                 to_utf16_tuple)
+from jsoncanon.functions import (
+    dict_to_sorted_by_utf16_tuple,
+    float_to_int_if_whole_and_not_large_exp,
+    int_to_str_if_too_large,
+    to_utf16_tuple,
+)
 from jsoncanon.util import JSON, JsonDataPreprocessor
 
 
@@ -73,24 +75,25 @@ def test_dict_to_sorted_by_utf16_tuple() -> None:
 def test_dict_to_sorted_by_utf16_tuple_recursive() -> None:
     def dict_to_sorted_by_utf16_tuple_recursive(data: JSON):
         _dict_to_sorted_by_utf16_tuple_recursive = JsonDataPreprocessor(
-            [dict_to_sorted_by_utf16_tuple])
+            [dict_to_sorted_by_utf16_tuple]
+        )
         return _dict_to_sorted_by_utf16_tuple_recursive(data)
 
-    assert dict_to_sorted_by_utf16_tuple_recursive({
-        'b': {
-            'd': 3, 'c': 2
-        }, 'a': 1
-    }) == {
-        'b': {
-            'c': 2, 'd': 3
-        }, 'a': 1
+    assert dict_to_sorted_by_utf16_tuple_recursive(
+        {
+            'b': {'d': 3, 'c': 2},
+            'a': 1,
+        }
+    ) == {
+        'b': {'c': 2, 'd': 3},
+        'a': 1,
     }
-    assert dict_to_sorted_by_utf16_tuple_recursive({
-        'a': [{
-            '😀דּ': 3, 'דּ😀': 2
-        }, 4], 'b': 2
-    }) == {
-        'a': [{
-            'דּ😀': 2, '😀דּ': 3
-        }, 4], 'b': 2
+    assert dict_to_sorted_by_utf16_tuple_recursive(
+        {
+            'a': [{'😀דּ': 3, 'דּ😀': 2}, 4],
+            'b': 2,
+        }
+    ) == {
+        'a': [{'דּ😀': 2, '😀דּ': 3}, 4],
+        'b': 2,
     }

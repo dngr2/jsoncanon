@@ -18,12 +18,11 @@ uv run pytest
 
 ## Code style
 
-The project uses `yapf` for formatting, `isort` for import sorting, and `flake8` for linting.
+The project uses [ruff](https://docs.astral.sh/ruff/) for formatting and linting.
 
 ```
-uv run yapf -ir src tests
-uv run isort src tests
-uv run flake8 src tests
+uv run ruff format
+uv run ruff check
 ```
 
 ## Submitting changes

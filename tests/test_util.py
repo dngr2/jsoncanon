@@ -2,8 +2,8 @@ from enum import IntEnum
 from types import NoneType
 from typing import Annotated
 
-from jsoncanon.util import ensure_plain_type, JSON, JSON_Dict, JSON_List, JsonDataPreprocessor
 import pytest
+from jsoncanon.util import JSON, JSON_Dict, JSON_List, JsonDataPreprocessor, ensure_plain_type
 
 
 def test_ensure_plain_type() -> None:
@@ -14,24 +14,20 @@ def test_ensure_plain_type() -> None:
     assert ensure_plain_type(dict[int, int]) == dict
 
 
-def invalid_preproc_func_two_params(i: int, s: str) -> str:
-    ...
+def invalid_preproc_func_two_params(i: int, s: str) -> str: ...
 
 
-def invalid_preproc_func_one_param_pos_or_keyword(s: str) -> str:
-    ...
+def invalid_preproc_func_one_param_pos_or_keyword(s: str) -> str: ...
 
 
-def invalid_preproc_func_one_param_no_annotation(s) -> str:
-    ...
+def invalid_preproc_func_one_param_no_annotation(s) -> str: ...
 
 
-def invalid_preproc_func_no_return_annotation(s) -> str:
-    ...
+def invalid_preproc_func_no_return_annotation(s) -> str: ...
 
 
 @pytest.mark.parametrize(
-    "preproc_func",
+    'preproc_func',
     [
         invalid_preproc_func_two_params,
         invalid_preproc_func_one_param_pos_or_keyword,
@@ -70,20 +66,23 @@ def json_data_preprocessor() -> JsonDataPreprocessor:
     def list_reverse_func(li: JSON_List, /) -> JSON_List:
         return [_ for _ in reversed(li)]
 
-    return JsonDataPreprocessor([
-        str_upper_func,
-        int_increase_func,
-        float_halve_func,
-        float_to_str_func,
-        bool_invert_func,
-        none_to_str_func,
-        dict_upper_keys_func,
-        list_reverse_func,
-    ])
+    return JsonDataPreprocessor(
+        [
+            str_upper_func,
+            int_increase_func,
+            float_halve_func,
+            float_to_str_func,
+            bool_invert_func,
+            none_to_str_func,
+            dict_upper_keys_func,
+            list_reverse_func,
+        ]
+    )
 
 
 def test_preprocess_json_data_core_types(
-        json_data_preprocessor: Annotated[JsonDataPreprocessor, pytest.fixture]) -> None:
+    json_data_preprocessor: Annotated[JsonDataPreprocessor, pytest.fixture],
+) -> None:
     data: JSON = {
         'outer_key': [
             'text',
@@ -98,7 +97,9 @@ def test_preprocess_json_data_core_types(
             (True, False, 'maybe'),
         ],
     }
-    assert json_data_preprocessor(data,) == {
+    assert json_data_preprocessor(
+        data,
+    ) == {
         'OUTER_KEY': [
             ['MAYBE', True, False],
             {
