@@ -1,30 +1,36 @@
-[tool.poetry]
+[project]
 name = "jsoncanon"
 version = "0.2.3"
 description = "Typed Python implementation of JSON Canonicalization Scheme as described in RFC 8785. Currently lacks full floating point support"
 license = "Apache-2.0"
-repository = "https://github.com/sveinugu/jsoncanon"
-authors = ["Sveinung Gundersen <sveinugu@gmail.com>"]
+authors = [{name = "Sveinung Gundersen", email = "sveinugu@gmail.com"}]
 readme = "README.md"
 keywords = ["JSON", "RFC-8785", "canonicalization", "deterministic", "serialization", "hash"]
 classifiers = ["Development Status :: 2 - Pre-Alpha", "Intended Audience :: Developers", "License :: OSI Approved :: Apache Software License", "Programming Language :: Python :: 3.10", "Topic :: Software Development :: Libraries"]
-packages = [{include = "jsoncanon", from = "src"}]
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "toml>=0.10.2",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-toml = "^0.10.2"
+[project.urls]
+repository = "https://github.com/sveinugu/jsoncanon"
 
-[tool.poetry.dev-dependencies]
-pytest = "^7.1.0"
-pytest-pycharm = "^0.7.0"
-yapf = "^0.32.0"
-flake8 = "^4.0.1"
-isort = "^5.10.1"
-flake8-quotes = "^3.3.1"
+[dependency-groups]
+dev = [
+    "pytest>=7.1.0,<8",
+    "pytest-pycharm>=0.7.0,<0.8",
+    "yapf>=0.43.0,<0.44",
+    "flake8>=4.0.1,<5",
+    "isort>=5.10.1,<6",
+    "flake8-quotes>=3.3.1,<4",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jsoncanon"]
 
 [tool.yapf]
 based_on_style = "google"
