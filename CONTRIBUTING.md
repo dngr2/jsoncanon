@@ -7,7 +7,7 @@ Thanks for considering contributing to jsoncanon!
 This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
 
 ```
-uv sync
+uv sync --group dev
 uv run prek install
 ```
 
@@ -59,7 +59,7 @@ uv run mypy src
 
 ## IDE setup
 
-Run `uv sync` first so the `.venv` used below exists.
+Run `uv sync --group dev` first so the `.venv` and development tools used below exist.
 
 ### VS Code
 
