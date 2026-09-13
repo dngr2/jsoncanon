@@ -65,12 +65,12 @@ def test_numbers():
     with pytest.raises(ValueError):
         assert canonicalize(float('inf'))
 
-    assert canonicalize([9223372036854775807]) == b'[9223372036854775807]'
-    assert canonicalize([9223372036854775808]) == b'["9223372036854775808"]'
-    assert canonicalize([56.0]) == b'[56]'
-    assert canonicalize([1e20]) == b'["100000000000000000000"]'
-    assert canonicalize([1e21]) == b'[1e+21]'
-    assert canonicalize([1e-6]) == b'0.000001'
+    assert canonicalize(9223372036854775295) == b'9223372036854775000'
+    assert canonicalize(9223372036854775296) == b'9223372036854776000'
+    assert canonicalize(56.0) == b'56'
+    assert canonicalize(1e20) == b'100000000000000000000'
+    assert canonicalize(1e21) == b'1e+21'
+    assert canonicalize(1e-6) == b'0.000001'
 
 
 def test_sorting():
