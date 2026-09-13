@@ -8,6 +8,13 @@ This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
 
 ```
 uv sync
+uv run prek install
+```
+
+To manually run all pre-commit hooks against all files:
+
+```
+uv run prek run --all-files
 ```
 
 ## Running tests
@@ -31,4 +38,3 @@ uv run ruff check
 2. Make your changes, ensuring tests pass and code is formatted/linted.
 3. Add or update tests to cover your change.
 4. Open a pull request describing the change and the motivation behind it.
-
