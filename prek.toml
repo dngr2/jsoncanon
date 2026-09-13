@@ -7,25 +7,66 @@ exclude = "^tests/json-canonicalization/"
 [[repos]]
 repo = "https://github.com/pre-commit/pre-commit-hooks"
 rev = "v5.0.0"
-hooks = [
-    { id = "trailing-whitespace", groups = ["watch", "commit"] },
-    { id = "end-of-file-fixer", groups = ["watch", "commit"] },
-    { id = "check-toml", groups = ["commit"] },
-    { id = "check-yaml", groups = ["commit"] },
-    { id = "check-merge-conflict", groups = ["commit"] },
-]
+
+[[repos.hooks]]
+id = "trailing-whitespace"
+groups = ["watch", "commit"]
+
+[[repos.hooks]]
+id = "end-of-file-fixer"
+groups = ["watch", "commit"]
+
+[[repos.hooks]]
+id = "check-toml"
+groups = ["commit"]
+
+[[repos.hooks]]
+id = "check-yaml"
+groups = ["commit"]
+
+[[repos.hooks]]
+id = "check-merge-conflict"
+groups = ["commit"]
 
 [[repos]]
 repo = "https://github.com/astral-sh/ruff-pre-commit"
 rev = "v0.13.3"
-hooks = [
-    { id = "ruff-check", args = ["--fix"], groups = ["commit"] },
-    { id = "ruff-format", groups = ["commit"] },
-]
+
+[[repos.hooks]]
+id = "ruff-check"
+args = ["--fix"]
+groups = ["commit"]
+
+[[repos.hooks]]
+id = "ruff-format"
+groups = ["commit"]
 
 [[repos]]
 repo = "local"
-hooks = [
-    { id = "pyright", name = "pyright", entry = "uv run pyright src", language = "system", types = ["python"], pass_filenames = false, groups = ["commit"] },
-    { id = "mypy", name = "mypy", entry = "uv run mypy src", language = "system", types = ["python"], pass_filenames = false, groups = ["commit"] },
-]
+
+[[repos.hooks]]
+id = "pyright"
+name = "pyright"
+entry = "uv run pyright src"
+language = "system"
+types = ["python"]
+pass_filenames = false
+groups = ["commit"]
+
+[[repos.hooks]]
+id = "mypy"
+name = "mypy"
+entry = "uv run mypy src"
+language = "system"
+types = ["python"]
+pass_filenames = false
+groups = ["commit"]
+
+[[repos.hooks]]
+id = "taplo"
+
+name = "taplo fmt"
+entry = "uv run taplo fmt"
+language = "system"
+types = ["toml"]
+groups = ["watch", "commit"]

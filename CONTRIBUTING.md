@@ -40,6 +40,13 @@ uv run ruff format
 uv run ruff check
 ```
 
+TOML files (`pyproject.toml`, `prek.toml`) are formatted with
+[taplo](https://taplo.tamasfe.dev/), configured in `.taplo.toml`.
+
+```
+uv run taplo fmt
+```
+
 ## Type checking
 
 The project uses [pyright](https://microsoft.github.io/pyright/) (strict mode)
@@ -57,8 +64,9 @@ Run `uv sync` first so the `.venv` used below exists.
 ### VS Code
 
 1. Install the extensions: **Python** (`ms-python.python`), **Pylance**
-   (`ms-python.vscode-pylance`), **Ruff** (`charliermarsh.ruff`), and
-   **Mypy Type Checker** (`ms-python.mypy-type-checker`).
+   (`ms-python.vscode-pylance`), **Ruff** (`charliermarsh.ruff`),
+   **Mypy Type Checker** (`ms-python.mypy-type-checker`), and
+   **Even Better TOML** (`tamasfe.even-better-toml`).
 2. Select the interpreter: Command Palette → "Python: Select Interpreter" →
    choose `.venv/bin/python` (created by `uv sync`).
 3. Set Ruff as the default formatter for Python and enable format-on-save:
@@ -71,12 +79,14 @@ Run `uv sync` first so the `.venv` used below exists.
    `pyproject.toml` — no extra configuration needed.
 6. The Mypy extension picks up `[tool.mypy]` from `pyproject.toml`
    automatically once the interpreter is set.
-7. Optionally, run the rest of the prek `watch` group (the checks not
-   already covered by the Ruff extension above) automatically on save. VS
-   Code has no built-in file watcher equivalent to PyCharm's, but the
-   **Run on Save** extension (`emeraldwalk.runonsave`) provides the same
-   behavior. Install it, then add to your `settings.json` (user or
-   workspace, not committed):
+7. Even Better TOML formats `.toml` files using `.taplo.toml`
+   automatically. Enable format-on-save for TOML the same way as step 3.
+8. Optionally, run the rest of the prek `watch` group (the checks not
+   already covered by the Ruff extension or Even Better TOML above)
+   automatically on save. VS Code has no built-in file watcher equivalent to
+   PyCharm's, but the **Run on Save** extension (`emeraldwalk.runonsave`)
+   provides the same behavior. Install it, then add to your `settings.json`
+   (user or workspace, not committed):
    ```json
    "emeraldwalk.runonsave": {
      "commands": [
@@ -101,9 +111,10 @@ Run `uv sync` first so the `.venv` used below exists.
    `[tool.pyright]` in `pyproject.toml`.
 4. For mypy, either install the **Mypy** plugin or rely on `uv run mypy src`
    / the `commit` prek group.
-5. Optionally, run the rest of the prek `watch` group (the checks not
-   already covered by the Ruff plugin above) automatically on save via a
-   File Watcher: Settings → Tools → File Watchers → **+** → **Custom**:
+5. Optionally, run the prek `watch` group (the checks not already covered by
+   the Ruff plugin above — trailing whitespace/EOF fixers and taplo)
+   automatically on save via a File Watcher: Settings → Tools →
+   File Watchers → **+** → **Custom**:
    - Name: `prek watch`
    - File type: `Any`
    - Program: `uv` (or the full path from `which uv`)
