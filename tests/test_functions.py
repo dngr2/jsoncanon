@@ -73,7 +73,7 @@ def test_dict_to_sorted_by_utf16_tuple():
 def test_dict_to_sorted_by_utf16_tuple_recursive():
     def dict_to_sorted_by_utf16_tuple_recursive(data: JSON):
         _dict_to_sorted_by_utf16_tuple_recursive = JsonDataPreprocessor(
-            dict_func=dict_to_sorted_by_utf16_tuple)
+            [dict_to_sorted_by_utf16_tuple])
         return _dict_to_sorted_by_utf16_tuple_recursive(data)
 
     assert dict_to_sorted_by_utf16_tuple_recursive({
