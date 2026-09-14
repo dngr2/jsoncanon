@@ -35,8 +35,8 @@ dev = [
     "pytest-pycharm>=0.7.0,<0.8",
     "ruff>=0.16.0,<0.17",
     "prek>=0.2.0,<1",
+    "basedpyright>=1.40.1",
     "mypy>=2.3.0,<3",
-    "pyright>=1.1.400,<2",
     "taplo>=0.9.0,<1",
 ]
 
@@ -52,6 +52,7 @@ line-length = 100
 src = ["src/jsoncanon", "tests"]
 extend-exclude = ["tests/json-canonicalization"]
 force-exclude = true
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "C90", "I", "Q"]

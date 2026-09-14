@@ -45,9 +45,9 @@ groups = ["commit"]
 repo = "local"
 
 [[repos.hooks]]
-id = "pyright"
-name = "pyright"
-entry = "uv run pyright src"
+id = "basedpyright"
+name = "basedpyright"
+entry = "uv run basedpyright src"
 language = "system"
 types = ["python"]
 pass_filenames = false
