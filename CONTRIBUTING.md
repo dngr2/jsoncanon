@@ -102,17 +102,18 @@ Run `uv sync --group dev` first so the `.venv` and development tools used below 
 
 1. Set the project interpreter to `.venv` (created by `uv sync`):
    Settings → Project → Python Interpreter → Add → select `.venv/bin/python`.
-2. Install the **Ruff** plugin (Settings → Plugins) for linting/formatting;
-   it picks up the config from `pyproject.toml` automatically. Enable
-   "Run ruff format on save" and "Use ruff format" under Settings → Tools →
-   Ruff, so the plugin handles ruff live in the editor.
+2. PyCharm includes Ruff support. Enable the bundled Ruff external tool under
+   Settings → Python → Tools → **External Tools**;
+   it picks up the config from `pyproject.toml` automatically. To format on
+   save, go to Settings → Tools → **Actions on Save**, select **Reformat code**,
+   and configure its file types to include **Python**.
 3. Enable Pyright as the type checker: Settings → Languages & Frameworks →
    Python → Type Checker → select **Pyright**. It picks up strict mode from
    `[tool.pyright]` in `pyproject.toml`.
 4. For mypy, either install the **Mypy** plugin or rely on `uv run mypy src`
    / the `commit` prek group.
 5. Optionally, run the prek `watch` group (the checks not already covered by
-   the Ruff plugin above — trailing whitespace/EOF fixers and taplo)
+   Ruff above — trailing whitespace/EOF fixers and taplo)
    automatically on save via a File Watcher: Settings → Tools →
    File Watchers → **+** → **Custom**:
    - Name: `prek watch`
