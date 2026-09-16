@@ -8,23 +8,21 @@ from typing import (
 )
 
 from jsoncanon.types import (
-    Json,
     JsonScalar,
     JsonType,
+    JsonWithFinal,
     JsonWithTuple,
     JsonWithTupleT,
     PreprocFunc,
     PreprocInputFunc,
-    PreprocInputType,
-    PreprocReturnType,
 )
 from jsoncanon.util import ensure_plain_type
 
 
 @dataclass
 class PreprocFuncInfo:
-    input_type: type[PreprocInputType]
-    return_type: type[PreprocReturnType]
+    input_type: type[JsonWithFinal]
+    return_type: type[JsonWithFinal]
     func: PreprocFunc
 
 
@@ -77,25 +75,25 @@ class JsonDataPreprocessor:
         return ensure_plain_type(input_annotation)
 
     @overload
-    def __call__(self, data: dict[str, JsonWithTupleT]) -> Json: ...
+    def __call__(self, data: dict[str, JsonWithTupleT]) -> JsonWithFinal: ...
 
     @overload
-    def __call__(self, data: list[JsonWithTupleT]) -> Json: ...
+    def __call__(self, data: list[JsonWithTupleT]) -> JsonWithFinal: ...
 
     @overload
-    def __call__(self, data: tuple[JsonWithTupleT, ...]) -> Json: ...
+    def __call__(self, data: tuple[JsonWithTupleT, ...]) -> JsonWithFinal: ...
 
     @overload
-    def __call__(self, data: JsonScalar) -> Json: ...
+    def __call__(self, data: JsonScalar) -> JsonWithFinal: ...
 
     @overload
-    def __call__(self, data: JsonWithTuple) -> Json: ...
+    def __call__(self, data: JsonWithTuple) -> JsonWithFinal: ...
 
-    def __call__(self, data: object) -> Json:
+    def __call__(self, data: object) -> JsonWithFinal:
         return self._preprocess(cast(JsonWithTuple, data))
 
-    def _preprocess(self, data: JsonWithTuple) -> Json:
-        output: Json
+    def _preprocess(self, data: JsonWithTuple) -> JsonWithFinal:
+        output: JsonWithFinal
         match data:
             case str():
                 output = self._preprocess_for_type(data, str)
@@ -117,7 +115,7 @@ class JsonDataPreprocessor:
                 raise TypeError(f'Object of type "{type(data)}" not supported')
         return output
 
-    def _preprocess_for_type(self, data: Json, data_type: JsonType) -> Json:
+    def _preprocess_for_type(self, data: JsonWithFinal, data_type: JsonType) -> JsonWithFinal:
         preproc_funcs_for_data_type = self._preproc_func_info_dict[data_type]
         for preproc_func_info in preproc_funcs_for_data_type:
             data = preproc_func_info.func(data)
