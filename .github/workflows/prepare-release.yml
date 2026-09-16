@@ -34,6 +34,10 @@ jobs:
           ref: main
           fetch-depth: 0
       - uses: astral-sh/setup-uv@v6
+      - name: Configure Git identity
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR_ID+$GITHUB_ACTOR@users.noreply.github.com"
       - name: Validate release tag
         env:
           TAG: ${{ inputs.tag }}
