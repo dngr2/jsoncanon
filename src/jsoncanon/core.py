@@ -36,17 +36,18 @@ def canonicalize(data: object) -> bytes:
     return _canonicalize(cast(JsonWithTuple, data))
 
 
+_preprocess = JsonDataPreprocessor(
+    [
+        int_to_str_if_too_large,
+        float_to_int_if_whole_and_not_large_exp,
+        dict_to_sorted_by_utf16_tuple,
+    ]
+)
+
+
 def _canonicalize(data: JsonWithTuple) -> bytes:
-    preprocess = JsonDataPreprocessor(
-        [
-            int_to_str_if_too_large,
-            float_to_int_if_whole_and_not_large_exp,
-            dict_to_sorted_by_utf16_tuple,
-        ]
-    )
-    preprocessed_data = preprocess(data)
     output = json.dumps(
-        preprocessed_data,
+        _preprocess(data),
         separators=(',', ':'),
         ensure_ascii=False,
         allow_nan=False,
