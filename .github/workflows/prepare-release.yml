@@ -67,12 +67,25 @@ jobs:
         env:
           TAG: ${{ inputs.tag }}
         run: git push origin "$TAG"
+      - name: Generate commit notes
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          printf '## Commits\n\n' > release-notes.md
+          PREVIOUS_TAG="$(git describe --tags --abbrev=0 "$TAG^" 2>/dev/null || true)"
+          if [ -n "$PREVIOUS_TAG" ]; then
+            RANGE="$PREVIOUS_TAG..$TAG"
+          else
+            RANGE="$TAG"
+          fi
+          git log --format="- %s ([%h](https://github.com/$GITHUB_REPOSITORY/commit/%H))" "$RANGE" \
+            >> release-notes.md
       - name: Create draft release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
         run: |
-          if ! gh release create "$TAG" dist/* --draft --generate-notes --title "$TAG"; then
+          if ! gh release create "$TAG" dist/* --draft --generate-notes --notes "$(cat release-notes.md)" --title "$TAG" --verify-tag; then
             gh release delete "$TAG" --yes || true
             git push origin ":refs/tags/$TAG"
             exit 1

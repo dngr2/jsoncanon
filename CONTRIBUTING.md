@@ -155,11 +155,14 @@ page, add a trusted publisher with:
    `main`.
 2. Enter the new tag as `vX.Y.Z` (for example, `v0.2.4`) and run the workflow.
 3. The workflow runs CI, creates the tag locally, builds the tagged version,
-   then pushes the tag and creates a draft GitHub Release with generated notes
-   and the wheel and source distribution attached.
-4. Open the draft under **Releases**, review and edit its notes, then click
+   then pushes the tag and creates a draft GitHub Release with a complete commit
+   list, GitHub-generated pull request and contributor notes, and the wheel and
+   source distribution attached.
+4. For a long commit list, optionally use an LLM manually to draft a concise
+   summary of the main changes; review its output before adding it to the notes.
+5. Open the draft under **Releases**, review and edit its notes, then click
    **Publish release**.
-5. Publishing the GitHub Release runs `.github/workflows/release.yml`, which
+6. Publishing the GitHub Release runs `.github/workflows/release.yml`, which
    uploads the previously validated release assets to PyPI.
 
 If preparation fails before the draft release is created, no remote tag or
