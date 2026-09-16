@@ -4,7 +4,8 @@ from jsoncanon.functions import (
     int_to_str_if_too_large,
     to_utf16_tuple,
 )
-from jsoncanon.util import Json, JsonDataPreprocessor, JsonWithTuple
+from jsoncanon.preprocess import JsonDataPreprocessor
+from jsoncanon.types import Json, JsonWithTuple
 
 
 def test_float_to_int_if_whole_and_not_large_exp() -> None:

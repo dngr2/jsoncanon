@@ -6,12 +6,10 @@ from jsoncanon.functions import (
     float_to_int_if_whole_and_not_large_exp,
     int_to_str_if_too_large,
 )
-from jsoncanon.util import (
+from jsoncanon.preprocess import (
     JsonDataPreprocessor,
-    JsonScalar,
-    JsonWithTuple,
-    JsonWithTupleT,
 )
+from jsoncanon.types import JsonScalar, JsonWithTuple, JsonWithTupleT
 
 
 @overload

@@ -1,4 +1,4 @@
-from jsoncanon.util import Json
+from jsoncanon.types import Json
 
 
 def int_to_str_if_too_large(i: int, /) -> int | str:
