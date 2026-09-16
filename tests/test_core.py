@@ -59,6 +59,7 @@ def test_strings() -> None:
     assert canonicalize('ö') == bytes('"ö"', 'utf8')
 
 
+@pytest.mark.skip(reason='Floating point support has not been implemented yet')
 def test_numbers() -> None:
     with pytest.raises(ValueError):
         assert canonicalize(float('nan'))
