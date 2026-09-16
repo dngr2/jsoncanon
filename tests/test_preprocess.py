@@ -1,4 +1,5 @@
 from enum import IntEnum
+from types import MappingProxyType
 from typing import Annotated
 
 import pytest
@@ -117,8 +118,19 @@ def test_preprocess_json_data_int_enum(
     assert json_data_preprocessor([Choice.Yes, Choice.No]) == [1, 2]
 
 
-def test_preprocess_json_data_set_fail(
-    json_data_preprocessor: Annotated[JsonDataPreprocessor, pytest.fixture],
+@pytest.mark.parametrize(
+    'data',
+    [
+        b'bytes',
+        {1, 2, 3},
+        MappingProxyType({'a': 1, 'b': 2}),
+        range(3),
+        (_ for _ in range(3)),
+    ],
+    ids=['bytes', 'set', 'mapping_proxy', 'range', 'generator'],
+)
+def test_preprocess_json_incorrect_data(
+    json_data_preprocessor: Annotated[JsonDataPreprocessor, pytest.fixture], data: object
 ) -> None:
     with pytest.raises(TypeError):
-        assert json_data_preprocessor(set([1, 2, 3]))  # type: ignore[call-overload]
+        assert json_data_preprocessor(data)  # type: ignore[call-overload]
