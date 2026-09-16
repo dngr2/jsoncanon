@@ -35,11 +35,11 @@ rev = "v0.13.3"
 [[repos.hooks]]
 id = "ruff-check"
 args = ["--fix"]
-groups = ["commit"]
+groups = ["watch", "commit"]
 
 [[repos.hooks]]
 id = "ruff-format"
-groups = ["commit"]
+groups = ["watch", "commit"]
 
 [[repos]]
 repo = "local"

@@ -103,26 +103,28 @@ Run `uv sync --group dev` first so the `.venv` and development tools used below 
 1. Set the project interpreter to `.venv` (created by `uv sync`):
    Settings → Project → Python Interpreter → Add → select `.venv/bin/python`.
 2. PyCharm includes Ruff support. Enable the bundled Ruff external tool under
-   Settings → Python → Tools → **External Tools**;
-   it picks up the config from `pyproject.toml` automatically. To format on
-   save, go to Settings → Tools → **Actions on Save**, select **Reformat code**,
-   and configure its file types to include **Python**.
+   Settings → Python → Tools → **External Tools**; it picks up the config
+   from `pyproject.toml` automatically, for manual invocation. Formatting and
+   auto-fixing on save are handled by the File Watcher in step 5 (which now
+   runs `ruff format` and `ruff check --fix`) — do **not** also enable
+   PyCharm's Settings → Tools → Actions on Save → **Reformat code** for
+   Python, since PyCharm's built-in formatter uses different style rules than
+   ruff and will fight with it.
 3. Enable Pyright as the type checker: Settings → Languages & Frameworks →
    Python → Type Checker → select **Pyright**. It picks up strict mode from
    `[tool.pyright]` in `pyproject.toml`.
 4. For mypy, either install the **Mypy** plugin or rely on `uv run mypy src`
    / the `commit` prek group.
-5. Optionally, run the prek `watch` group (the checks not already covered by
-   Ruff above — trailing whitespace/EOF fixers and taplo)
-   automatically on save via a File Watcher: Settings → Tools →
-   File Watchers → **+** → **Custom**:
+5. Run the prek `watch` group (`ruff format`, `ruff check --fix`, trailing
+   whitespace/EOF fixers, and taplo) automatically on save via a File
+   Watcher: Settings → Tools → File Watchers → **+** → **Custom**:
    - Name: `prek watch`
    - File type: `Any`
    - Program: `uv` (or the full path from `which uv`)
    - Arguments: `run prek run --group watch --files $FilePath$`
    - Working directory: `$ProjectFileDir$`
    - Under **Advanced Options**, uncheck "Auto-save edited files to trigger
-     the watcher" if you only want it to run on explicit save (Cmd/Ctrl+S).
+     the watcher"
 
 ## Submitting changes
 
