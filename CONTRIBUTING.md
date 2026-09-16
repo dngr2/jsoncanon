@@ -168,4 +168,6 @@ page, add a trusted publisher with:
 If preparation fails before the draft release is created, no remote tag or
 PyPI release is created. Fix the issue on `main` and run **Prepare release**
 again with the same version. If PyPI publishing fails without uploading any
-files, rerun the failed publish job.
+files, rerun the failed publish job. After a workflow fix has been merged, use
+**Actions → Publish release → Run workflow** with the published release tag to
+retry without rebuilding or changing the version.
