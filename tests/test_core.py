@@ -74,7 +74,7 @@ def test_numbers() -> None:
 
 
 def test_sorting() -> None:
-    input = {
+    in_data = {
         '€': 'Euro Sign',
         '\r': 'Carriage Return',
         'דּ': 'Hebrew Letter Dalet With Dagesh',
@@ -84,7 +84,7 @@ def test_sorting() -> None:
         'ö': 'Latin Small Letter O With Diaeresis',
     }
 
-    output = bytes(
+    out_data = bytes(
         '{"\\r":"Carriage Return",'
         '"1":"One",'
         '"\u0080":"Control",'
@@ -95,4 +95,4 @@ def test_sorting() -> None:
         'utf8',
     )
 
-    assert canonicalize(input) == output
+    assert canonicalize(in_data) == out_data

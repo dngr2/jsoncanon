@@ -1,14 +1,44 @@
 import json
+from typing import cast, overload
 
 from jsoncanon.functions import (
     dict_to_sorted_by_utf16_tuple,
     float_to_int_if_whole_and_not_large_exp,
     int_to_str_if_too_large,
 )
-from jsoncanon.util import JSON, JsonDataPreprocessor
+from jsoncanon.util import (
+    JsonDataPreprocessor,
+    JsonScalar,
+    JsonWithTuple,
+    JsonWithTupleT,
+)
 
 
-def canonicalize(data: JSON) -> bytes:
+@overload
+def canonicalize(data: dict[str, JsonWithTupleT]) -> bytes: ...
+
+
+@overload
+def canonicalize(data: list[JsonWithTupleT]) -> bytes: ...
+
+
+@overload
+def canonicalize(data: tuple[JsonWithTupleT, ...]) -> bytes: ...
+
+
+@overload
+def canonicalize(data: JsonScalar) -> bytes: ...
+
+
+@overload
+def canonicalize(data: JsonWithTuple) -> bytes: ...
+
+
+def canonicalize(data: object) -> bytes:
+    return _canonicalize(cast(JsonWithTuple, data))
+
+
+def _canonicalize(data: JsonWithTuple) -> bytes:
     preprocess = JsonDataPreprocessor(
         [
             int_to_str_if_too_large,
@@ -16,9 +46,9 @@ def canonicalize(data: JSON) -> bytes:
             dict_to_sorted_by_utf16_tuple,
         ]
     )
-    data = preprocess(data)
+    preprocessed_data = preprocess(data)
     output = json.dumps(
-        data,
+        preprocessed_data,
         separators=(',', ':'),
         ensure_ascii=False,
         allow_nan=False,

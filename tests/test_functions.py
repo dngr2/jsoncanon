@@ -4,7 +4,7 @@ from jsoncanon.functions import (
     int_to_str_if_too_large,
     to_utf16_tuple,
 )
-from jsoncanon.util import JSON, JsonDataPreprocessor
+from jsoncanon.util import Json, JsonDataPreprocessor, JsonWithTuple
 
 
 def test_float_to_int_if_whole_and_not_large_exp() -> None:
@@ -73,7 +73,7 @@ def test_dict_to_sorted_by_utf16_tuple() -> None:
 
 
 def test_dict_to_sorted_by_utf16_tuple_recursive() -> None:
-    def dict_to_sorted_by_utf16_tuple_recursive(data: JSON):
+    def dict_to_sorted_by_utf16_tuple_recursive(data: JsonWithTuple) -> Json:
         _dict_to_sorted_by_utf16_tuple_recursive = JsonDataPreprocessor(
             [dict_to_sorted_by_utf16_tuple]
         )

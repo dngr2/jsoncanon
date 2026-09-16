@@ -87,7 +87,7 @@ Run `uv sync --group dev` first so the `.venv` and development tools used below 
    PyCharm's, but the **Run on Save** extension (`emeraldwalk.runonsave`)
    provides the same behavior. Install it, then add to your `settings.json`
    (user or workspace, not committed):
-   ```json
+   ```
    "emeraldwalk.runonsave": {
      "commands": [
        {

@@ -3,7 +3,13 @@ from types import NoneType
 from typing import Annotated
 
 import pytest
-from jsoncanon.util import JSON, JSON_Dict, JSON_List, JsonDataPreprocessor, ensure_plain_type
+from jsoncanon.util import (
+    Json,
+    JsonDataPreprocessor,
+    JsonWithTuple,
+    PreprocFunc,
+    ensure_plain_type,
+)
 
 
 def test_ensure_plain_type() -> None:
@@ -14,28 +20,28 @@ def test_ensure_plain_type() -> None:
     assert ensure_plain_type(dict[int, int]) == dict
 
 
-def invalid_preproc_func_two_params(i: int, s: str) -> str: ...
+def invalid_preproc_func_two_params(i: int, s: str) -> str: ...  # type: ignore[empty-body]
 
 
-def invalid_preproc_func_one_param_pos_or_keyword(s: str) -> str: ...
+def invalid_preproc_func_one_param_pos_or_keyword(s: str) -> str: ...  # type: ignore[empty-body]
 
 
-def invalid_preproc_func_one_param_no_annotation(s) -> str: ...
+def invalid_preproc_func_one_param_no_annotation(s) -> str: ...  # type: ignore[empty-body, no-untyped-def]
 
 
-def invalid_preproc_func_no_return_annotation(s) -> str: ...
+def invalid_preproc_func_no_return_annotation(s) -> str: ...  # type: ignore[empty-body, no-untyped-def]
 
 
 @pytest.mark.parametrize(
     'preproc_func',
-    [
+    [  # pyright: ignore[reportUnknownArgumentType]
         invalid_preproc_func_two_params,
         invalid_preproc_func_one_param_pos_or_keyword,
         invalid_preproc_func_one_param_no_annotation,
         invalid_preproc_func_no_return_annotation,
     ],
 )
-def test_json_preprocessor_valid_funcs(preproc_func) -> None:
+def test_json_preprocessor_valid_funcs(preproc_func: PreprocFunc) -> None:
     with pytest.raises(AssertionError):
         JsonDataPreprocessor([preproc_func])
 
@@ -57,13 +63,13 @@ def json_data_preprocessor() -> JsonDataPreprocessor:
     def bool_invert_func(b: bool, /) -> bool:
         return not b
 
-    def none_to_str_func(n: NoneType, /) -> str:
+    def none_to_str_func(n: None, /) -> str:
         return str(n)
 
-    def dict_upper_keys_func(d: JSON_Dict, /) -> JSON_Dict:
+    def dict_upper_keys_func(d: dict[str, Json], /) -> dict[str, Json]:
         return {key.upper(): val for key, val in d.items()}
 
-    def list_reverse_func(li: JSON_List, /) -> JSON_List:
+    def list_reverse_func(li: list[Json], /) -> list[Json]:
         return [_ for _ in reversed(li)]
 
     return JsonDataPreprocessor(
@@ -83,7 +89,7 @@ def json_data_preprocessor() -> JsonDataPreprocessor:
 def test_preprocess_json_data_core_types(
     json_data_preprocessor: Annotated[JsonDataPreprocessor, pytest.fixture],
 ) -> None:
-    data: JSON = {
+    data: JsonWithTuple = {
         'outer_key': [
             'text',
             1,
@@ -115,7 +121,9 @@ def test_preprocess_json_data_core_types(
     }
 
 
-def test_preprocess_json_data_int_enum(json_data_preprocessor) -> None:
+def test_preprocess_json_data_int_enum(
+    json_data_preprocessor: Annotated[JsonDataPreprocessor, pytest.fixture],
+) -> None:
     class Choice(IntEnum):
         Yes = 1
         No = 0
@@ -123,6 +131,8 @@ def test_preprocess_json_data_int_enum(json_data_preprocessor) -> None:
     assert json_data_preprocessor([Choice.Yes, Choice.No]) == [1, 2]
 
 
-def test_preprocess_json_data_set_fail(json_data_preprocessor) -> None:
+def test_preprocess_json_data_set_fail(
+    json_data_preprocessor: Annotated[JsonDataPreprocessor, pytest.fixture],
+) -> None:
     with pytest.raises(TypeError):
-        assert json_data_preprocessor(set([1, 2, 3]))
+        assert json_data_preprocessor(set([1, 2, 3]))  # type: ignore[call-overload]

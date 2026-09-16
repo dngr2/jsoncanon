@@ -1,4 +1,4 @@
-from jsoncanon.util import JSON, JSON_Dict
+from jsoncanon.util import Json
 
 
 def int_to_str_if_too_large(i: int, /) -> int | str:
@@ -15,17 +15,17 @@ def float_to_int_if_whole_and_not_large_exp(f: float, /) -> int | float:
         return f
 
 
-def to_utf16_tuple(any_str: str) -> tuple[int]:
+def to_utf16_tuple(any_str: str) -> tuple[int, ...]:
     utf_16_bytes = any_str.encode('utf-16-be')
     return tuple(
         int.from_bytes(utf_16_bytes[i : i + 2], 'big') for i in range(0, len(utf_16_bytes), 2)
     )
 
 
-def _key_to_utf16_tuple(keyval: tuple[str, JSON]) -> tuple[int]:
+def _key_to_utf16_tuple(keyval: tuple[str, Json]) -> tuple[int, ...]:
     key, _val = keyval
     return to_utf16_tuple(key)
 
 
-def dict_to_sorted_by_utf16_tuple(d: JSON_Dict, /) -> JSON_Dict:
+def dict_to_sorted_by_utf16_tuple(d: dict[str, Json], /) -> dict[str, Json]:
     return dict(sorted(d.items(), key=_key_to_utf16_tuple))
