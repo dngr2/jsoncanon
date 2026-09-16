@@ -9,7 +9,11 @@ JsonWithTuple: TypeAlias = (
 )
 JsonWithTupleT = TypeVar('JsonWithTupleT', bound=JsonWithTuple)
 
-JsonScalarWithFinal: TypeAlias = JsonScalar | 'FinalJson'
+
+class FinalJson(str): ...
+
+
+JsonScalarWithFinal: TypeAlias = JsonScalar | FinalJson
 JsonWithFinal: TypeAlias = JsonScalarWithFinal | dict[str, 'JsonWithFinal'] | list['JsonWithFinal']
 
 PreprocFunc: TypeAlias = Callable[[JsonWithFinal], JsonWithFinal]
@@ -26,17 +30,3 @@ PreprocInputFunc: TypeAlias = (
     | Callable[[dict[str, JsonWithFinal]], JsonWithFinal]
     | Callable[[list[JsonWithFinal]], JsonWithFinal]
 )
-
-
-class FinalJson:
-    def __init__(self, raw_json_str: str) -> None:
-        self._raw_json_str = raw_json_str
-
-    def __str__(self) -> str:
-        return self._raw_json_str
-
-    def __repr__(self) -> str:
-        return f"FinalJson('{self._raw_json_str}')"
-
-    def __eq__(self, other: object) -> bool:
-        return isinstance(other, FinalJson) and self._raw_json_str == other._raw_json_str

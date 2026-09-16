@@ -1,6 +1,7 @@
 import json
 from typing import cast, overload
 
+from jsoncanon.encoder import FinalJsonEncoder
 from jsoncanon.functions import (
     dict_to_sorted_by_utf16_tuple,
     float_to_int_if_whole_and_not_large_exp,
@@ -51,5 +52,6 @@ def _canonicalize(data: JsonWithTuple) -> bytes:
         separators=(',', ':'),
         ensure_ascii=False,
         allow_nan=False,
+        cls=FinalJsonEncoder,
     )
     return output.encode('utf8')
