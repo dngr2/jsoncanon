@@ -77,4 +77,5 @@ typeCheckingMode = "strict"
 
 [tool.mypy]
 strict = true
+files = ["src/jsoncanon", "tests"]
 exclude = ["tests/json-canonicalization"]
