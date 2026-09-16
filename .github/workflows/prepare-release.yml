@@ -1,0 +1,75 @@
+name: Prepare release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (for example, v0.2.4)
+        required: true
+        type: string
+
+jobs:
+  validate-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require main
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || {
+            echo "Prepare releases from main." >&2
+            exit 1
+          }
+
+  ci:
+    needs: validate-request
+    uses: ./.github/workflows/ci.yml
+
+  prepare:
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - name: Validate release tag
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          if ! [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+((a|b|rc)[0-9]+)?(\.post[0-9]+)?$ ]]; then
+            echo "Tag must be a PEP 440 release tag such as v0.2.4 or v1.0.0rc1." >&2
+            exit 1
+          fi
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG"; then
+            echo "Tag $TAG already exists." >&2
+            exit 1
+          fi
+      - name: Create local release tag
+        env:
+          TAG: ${{ inputs.tag }}
+        run: git tag --annotate "$TAG" --message "Release $TAG"
+      - name: Build release assets
+        run: uv build
+      - name: Check release assets
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          VERSION="${TAG#v}"
+          test "$(find dist -maxdepth 1 -name "jsoncanon-$VERSION.tar.gz" | wc -l | tr -d ' ')" = 1
+          test "$(find dist -maxdepth 1 -name "jsoncanon-$VERSION-*.whl" | wc -l | tr -d ' ')" = 1
+      - name: Push tag
+        env:
+          TAG: ${{ inputs.tag }}
+        run: git push origin "$TAG"
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if ! gh release create "$TAG" dist/* --draft --generate-notes --title "$TAG"; then
+            gh release delete "$TAG" --yes || true
+            git push origin ":refs/tags/$TAG"
+            exit 1
+          fi

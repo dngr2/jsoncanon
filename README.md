@@ -15,10 +15,3 @@ features needed by the [Sequence Collections working group](https://seqcol.readt
 >>> canonicalize(data)
 b'{"a":{"x":null,"y":true},"b":[1,3,7]}'
 ```
-
-## Releases
-
-v0.2.0 - Initial release, supporting all data types except for floating point numbers
-v0.2.1 - Yanked due to incorrect link
-v0.2.2 - Yanked due to incorrect dependencies
-v0.2.3 - Initial release with updated project information

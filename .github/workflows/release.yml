@@ -1,0 +1,25 @@
+name: Publish release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/jsoncanon/
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "$GITHUB_REF_NAME" --dir dist --pattern '*.tar.gz' --pattern '*.whl'
+      - name: Check release assets
+        run: |
+          test "$(find dist -maxdepth 1 -name '*.tar.gz' | wc -l | tr -d ' ')" = 1
+          test "$(find dist -maxdepth 1 -name '*.whl' | wc -l | tr -d ' ')" = 1
+      - uses: pypa/gh-action-pypi-publish@release/v1

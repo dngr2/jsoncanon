@@ -130,3 +130,39 @@ Run `uv sync --group dev` first so the `.venv` and development tools used below 
 2. Make your changes, ensuring tests pass and code is formatted/linted.
 3. Add or update tests to cover your change.
 4. Open a pull request describing the change and the motivation behind it.
+
+## Releasing
+
+Release versions are derived from Git tags. A tag `vX.Y.Z` produces a package
+with version `X.Y.Z`. Release notes are reviewed as a draft GitHub Release,
+then the approved release assets are published to PyPI using
+[Trusted Publishing](https://docs.pypi.org/trusted-publishers/) (no API tokens
+stored as secrets).
+
+### One-time setup
+
+On the [PyPI publishing settings](https://pypi.org/manage/project/jsoncanon/settings/publishing/)
+page, add a trusted publisher with:
+
+- Owner: `sveinugu`
+- Repository: `jsoncanon`
+- Workflow filename: `release.yml`
+- Environment name: `pypi`
+
+### Preparing and reviewing a release
+
+1. On GitHub, open **Actions → Prepare release → Run workflow** and select
+   `main`.
+2. Enter the new tag as `vX.Y.Z` (for example, `v0.2.4`) and run the workflow.
+3. The workflow runs CI, creates the tag locally, builds the tagged version,
+   then pushes the tag and creates a draft GitHub Release with generated notes
+   and the wheel and source distribution attached.
+4. Open the draft under **Releases**, review and edit its notes, then click
+   **Publish release**.
+5. Publishing the GitHub Release runs `.github/workflows/release.yml`, which
+   uploads the previously validated release assets to PyPI.
+
+If preparation fails before the draft release is created, no remote tag or
+PyPI release is created. Fix the issue on `main` and run **Prepare release**
+again with the same version. If PyPI publishing fails without uploading any
+files, rerun the failed publish job.
